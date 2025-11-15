@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if form.instance.pk %}Editar Evento{% else %}Crear Evento{% endif %}{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold">{% if form.instance.pk %}Editar Evento{% else %}Crear Evento{% endif %}</h1>
+<form method="post" class="mt-8 space-y-6">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div>
+        <button type="submit" class="px-4 py-2 font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700">Guardar</button>
+    </div>
+</form>
+{% endblock %}

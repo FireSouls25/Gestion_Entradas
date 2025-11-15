@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ event.title }}{% endblock %}
+
+{% block content %}
+<div class="p-8 bg-white rounded-lg shadow-md">
+    <h1 class="text-3xl font-bold">{{ event.title }}</h1>
+    <p class="mt-4 text-gray-600">{{ event.description }}</p>
+    <div class="mt-6">
+        <p><strong>Ubicación:</strong> {{ event.location.name }}</p>
+        <p><strong>Inicio:</strong> {{ event.start_time }}</p>
+        <p><strong>Fin:</strong> {{ event.end_time }}</p>
+        <p><strong>Organizador:</strong> {{ event.organizer.username }}</p>
+    </div>
+    {% if user.is_authenticated and user.userprofile.role == 'organizer' and user == event.organizer %}
+        <div class="flex mt-6 space-x-4">
+            <a href="{% url 'events:event-update' event.pk %}" class="px-4 py-2 font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">Editar</a>
+            <a href="{% url 'events:event-delete' event.pk %}" class="px-4 py-2 font-medium text-white bg-red-600 rounded-md hover:bg-red-700">Eliminar</a>
+            {% if user_ticket %}
+            <a href="{% url 'tickets:validate-ticket' user_ticket.id %}" class="px-4 py-2 font-medium text-white bg-green-600 rounded-md hover:bg-green-700">Validar Entrada</a>
+            {% endif %}
+        </div>
+    {% endif %}
+    {% if user_ticket %}
+        <div class="mt-6">
+            <h2 class="text-xl font-bold">Tu Entrada</h2>
+            <img src="{% url 'tickets:generate-qr-code' user_ticket.id %}" alt="QR Code">
+        </div>
+    {% endif %}
+    <div class="mt-6">
+        <a href="{% url 'events:event-list' %}" class="font-medium text-purple-600 hover:text-purple-500">Volver a la lista de eventos</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'users/auth_base.html' %}
+
+{% block title %}Registro{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-bold text-center">Registro</h2>
+<form method="post" class="mt-8 space-y-6">
+    {% csrf_token %}
+    
+    {% if form.errors %}
+        <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+            {{ form.errors }}
+        </div>
+    {% endif %}
+
+    {{ form.as_p }}
+
+    <div>
+        <button type="submit" class="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md group hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+            Registrarse
+        </button>
+    </div>
+    <p class="text-sm text-center">
+        ¿Ya tienes una cuenta? <a href="{% url 'users:login' %}" class="font-medium text-purple-600 hover:text-purple-500">Inicia Sesión</a>
+    </p>
+</form>
+{% endblock %}

@@ -7,7 +7,7 @@ class Location(models.Model):
     capacity = models.PositiveIntegerField()
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 class Event(models.Model):
     title = models.CharField(max_length=200)
@@ -18,7 +18,7 @@ class Event(models.Model):
     organizer = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.title
+        return str(self.title)
 
 class TicketType(models.Model):
     name = models.CharField(max_length=100)
@@ -26,5 +26,7 @@ class TicketType(models.Model):
     quantity = models.PositiveIntegerField()
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
 
+    event: "Event"
+    
     def __str__(self):
         return f'{self.name} ({self.event.title})'

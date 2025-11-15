@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Validar Entrada{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold">Validar Entrada</h1>
+<div class="mt-6">
+    <p><strong>Evento:</strong> {{ ticket.ticket_type.event.title }}</p>
+    <p><strong>Asistente:</strong> {{ ticket.attendee.username }}</p>
+    <p><strong>Tipo de Entrada:</strong> {{ ticket.ticket_type.name }}</p>
+    <p><strong>Estado:</strong> {% if ticket.is_validated %}Validada{% else %}No Validada{% endif %}</p>
+</div>
+<form method="post" class="mt-8">
+    {% csrf_token %}
+    <button type="submit" class="px-4 py-2 font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700">Validar</button>
+</form>
+{% endblock %}

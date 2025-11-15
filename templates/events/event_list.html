@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Eventos{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">Eventos</h1>
+    {% if user.is_authenticated and user.userprofile.role == 'organizer' %}
+        <a href="{% url 'events:event-create' %}" class="px-4 py-2 font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700">Crear Evento</a>
+    {% endif %}
+</div>
+
+<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+    {% for event in events %}
+        <div class="p-6 bg-white rounded-lg shadow-md">
+            <h2 class="text-xl font-bold">{{ event.title }}</h2>
+            <p class="mt-2 text-gray-600">{{ event.description|truncatewords:20 }}</p>
+            <div class="mt-4">
+                <a href="{% url 'events:event-detail' event.pk %}" class="font-medium text-purple-600 hover:text-purple-500">Ver Detalles</a>
+            </div>
+        </div>
+    {% empty %}
+        <p>No hay eventos disponibles.</p>
+    {% endfor %}
+</div>
+{% endblock %}
