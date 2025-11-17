@@ -7,6 +7,9 @@
 <form method="post" class="mt-8 space-y-6">
     {% csrf_token %}
     {{ form.as_p }}
+    {% if not locations %}
+        <p class="text-red-500">No hay ubicaciones disponibles. Por favor, <a href="{% url 'events:location-create' %}" class="font-medium text-purple-600 hover:text-purple-500">crea una nueva ubicación</a>.</p>
+    {% endif %}
     <div>
         <button type="submit" class="px-4 py-2 font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700">Guardar</button>
     </div>

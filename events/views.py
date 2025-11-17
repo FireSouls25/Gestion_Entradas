@@ -1,8 +1,9 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
-from .models import Event
-from .forms import EventForm
+from .models import Event, Location
+from .forms import EventForm, LocationForm
+from tickets.models import Ticket
 
 class OrganizerRequiredMixin(UserPassesTestMixin):
     def test_func(self):
@@ -12,8 +13,6 @@ class EventListView(ListView):
     model = Event
     template_name = 'events/event_list.html'
     context_object_name = 'events'
-
-from tickets.models import Ticket
 
 class EventDetailView(DetailView):
     model = Event
@@ -38,6 +37,11 @@ class EventCreateView(LoginRequiredMixin, OrganizerRequiredMixin, CreateView):
     template_name = 'events/event_form.html'
     success_url = reverse_lazy('events:event-list')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['locations'] = Location.objects.all()
+        return context
+
     def form_valid(self, form):
         form.instance.organizer = self.request.user
         return super().form_valid(form)
@@ -48,7 +52,35 @@ class EventUpdateView(LoginRequiredMixin, OrganizerRequiredMixin, UpdateView):
     template_name = 'events/event_form.html'
     success_url = reverse_lazy('events:event-list')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['locations'] = Location.objects.all()
+        return context
+
 class EventDeleteView(LoginRequiredMixin, OrganizerRequiredMixin, DeleteView):
     model = Event
     template_name = 'events/event_confirm_delete.html'
     success_url = reverse_lazy('events:event-list')
+
+# Location CRUD Views
+class LocationListView(LoginRequiredMixin, OrganizerRequiredMixin, ListView):
+    model = Location
+    template_name = 'events/location_list.html'
+    context_object_name = 'locations'
+
+class LocationCreateView(LoginRequiredMixin, OrganizerRequiredMixin, CreateView):
+    model = Location
+    form_class = LocationForm
+    template_name = 'events/location_form.html'
+    success_url = reverse_lazy('events:location-list')
+
+class LocationUpdateView(LoginRequiredMixin, OrganizerRequiredMixin, UpdateView):
+    model = Location
+    form_class = LocationForm
+    template_name = 'events/location_form.html'
+    success_url = reverse_lazy('events:location-list')
+
+class LocationDeleteView(LoginRequiredMixin, OrganizerRequiredMixin, DeleteView):
+    model = Location
+    template_name = 'events/location_confirm_delete.html'
+    success_url = reverse_lazy('events:location-list')

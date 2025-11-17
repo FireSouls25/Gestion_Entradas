@@ -1,5 +1,5 @@
 from django import forms
-from .models import Event
+from .models import Event, Location
 
 class EventForm(forms.ModelForm):
     class Meta:
@@ -9,3 +9,8 @@ class EventForm(forms.ModelForm):
             'start_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
             'end_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
+
+class LocationForm(forms.ModelForm):
+    class Meta:
+        model = Location
+        fields = ['name', 'address', 'capacity']
