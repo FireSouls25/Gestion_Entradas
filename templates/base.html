@@ -39,6 +39,17 @@
         </aside>
         <!-- Main content -->
         <main class="flex-1 p-10">
+            {% if messages %}
+                <div class="messages-container">
+                    {% for message in messages %}
+                        {% if 'login_error' not in message.tags %}
+                            <div class="p-4 mb-4 text-sm {% if message.tags == 'error' %}text-red-700 bg-red-100{% elif message.tags == 'success' %}text-green-700 bg-green-100{% else %}text-blue-700 bg-blue-100{% endif %} rounded-lg" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
             {% block content %}
             {% endblock %}
         </main>

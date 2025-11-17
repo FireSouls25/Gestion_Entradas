@@ -8,4 +8,5 @@ urlpatterns = [
     path('<int:ticket_id>/validate/', validate_ticket, name='validate-ticket'),
     path('event/<int:event_id>/purchase/', purchase_ticket_view, name='purchase-ticket'),
     path('my-tickets/', my_tickets_view, name='my-tickets'),
+    path('my-tickets/event/<int:event_id>/', my_tickets_view, name='my-tickets-event'),
 ]

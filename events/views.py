@@ -21,14 +21,11 @@ class EventDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
-            try:
-                ticket = Ticket.objects.get(
-                    attendee=self.request.user,
-                    ticket_type__event=self.object
-                )
-                context['user_ticket'] = ticket
-            except Ticket.DoesNotExist:
-                context['user_ticket'] = None
+            user_tickets = Ticket.objects.filter(
+                attendee=self.request.user,
+                ticket_type__event=self.object
+            )
+            context['user_tickets'] = user_tickets
         return context
 
 class EventCreateView(LoginRequiredMixin, OrganizerRequiredMixin, CreateView):

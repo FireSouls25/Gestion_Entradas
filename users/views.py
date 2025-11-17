@@ -54,9 +54,9 @@ def login_view(request):
                 login(request, user)
                 return redirect('dashboard:dashboard')
             else:
-                messages.error(request, 'Usuario o contraseña inválidos.')
+                messages.error(request, 'Usuario o contraseña inválidos.', extra_tags='login_error')
         else:
-            messages.error(request, 'Usuario o contraseña inválidos.')
+            messages.error(request, 'Usuario o contraseña inválidos.', extra_tags='login_error')
     else:
         form = AuthenticationForm()
     return render(request, 'users/login.html', {'form': form})

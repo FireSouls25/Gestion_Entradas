@@ -9,9 +9,11 @@
     
     {% if messages %}
         {% for message in messages %}
-            <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
-                {{ message }}
-            </div>
+            {% if 'login_error' in message.tags %}
+                <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+                    {{ message }}
+                </div>
+            {% endif %}
         {% endfor %}
     {% endif %}
 

@@ -8,9 +8,12 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 import random
 
-def my_tickets_view(request):
+@login_required
+def my_tickets_view(request, event_id=None):
     tickets = Ticket.objects.filter(attendee=request.user)
-    return render(request, 'tickets/my_tickets.html', {'tickets': tickets})
+    if event_id:
+        tickets = tickets.filter(ticket_type__event__id=event_id)
+    return render(request, 'tickets/my_tickets.html', {'tickets': tickets, 'event_id': event_id})
 
 def simulate_payment_api(amount):
     # Simulate a payment API call

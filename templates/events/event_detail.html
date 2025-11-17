@@ -50,12 +50,11 @@
                 </div>
             </form>
         </div>
-    {% endif %}
-    {% if user_ticket %}
-        <div class="mt-6">
-            <h2 class="text-xl font-bold">Tu Entrada</h2>
-            <img src="{% url 'tickets:generate-qr-code' user_ticket.id %}" alt="QR Code">
-        </div>
+        {% if user_tickets %}
+            <div class="mt-6">
+                <a href="{% url 'tickets:my-tickets-event' event.pk %}" class="px-4 py-2 font-medium text-white bg-green-600 rounded-md hover:bg-green-700">Ver mis entradas para este evento</a>
+            </div>
+        {% endif %}
     {% endif %}
     <div class="mt-6">
         <a href="{% url 'events:event-list' %}" class="font-medium text-purple-600 hover:text-purple-500">Volver a la lista de eventos</a>
