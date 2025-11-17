@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard del Cliente{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold">Dashboard del Cliente</h1>
+<p>Bienvenido, {{ user.username }}. Aquí puedes ver los eventos disponibles para comprar entradas.</p>
+<!-- Client-specific content goes here -->
+{% endblock %}

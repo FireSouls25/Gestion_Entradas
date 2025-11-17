@@ -4,11 +4,17 @@ from django.contrib.auth.models import User
 from .models import UserProfile
 
 class CustomUserCreationForm(UserCreationForm):
-    role = forms.ChoiceField(choices=UserProfile.USER_ROLE_CHOICES)
+    role = forms.ChoiceField(choices=UserProfile.USER_ROLE_CHOICES, label="Rol")
 
     class Meta(UserCreationForm.Meta):
         model = User
         fields = UserCreationForm.Meta.fields + ('email',)
+
+    def __init__(self, *args, **kwargs):
+        super(CustomUserCreationForm, self).__init__(*args, **kwargs)
+        self.fields['username'].error_messages = {
+            'unique': ("Ya existe un usuario con este nombre."),
+        }
 
     def save(self, commit=True):
         user = super().save(commit=False)

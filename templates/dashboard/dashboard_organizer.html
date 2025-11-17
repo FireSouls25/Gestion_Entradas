@@ -5,5 +5,19 @@
 {% block content %}
 <h1 class="text-2xl font-bold">Dashboard del Organizador</h1>
 <p>Bienvenido, {{ user.username }}. Aquí puedes gestionar tus eventos.</p>
-<!-- Organizer-specific content goes here -->
+
+<h2 class="mt-8 text-xl font-bold">Tus Eventos</h2>
+<div class="grid grid-cols-1 gap-6 mt-6 md:grid-cols-2 lg:grid-cols-3">
+    {% for event in events %}
+        <div class="p-6 bg-white rounded-lg shadow-md">
+            <h3 class="text-lg font-bold">{{ event.title }}</h3>
+            <div class="mt-4">
+                <a href="{% url 'events:event-detail' event.pk %}" class="font-medium text-purple-600 hover:text-purple-500">Ver Detalles</a>
+                <a href="{% url 'dashboard:event-statistics' event.pk %}" class="ml-4 font-medium text-blue-600 hover:text-blue-500">Ver Estadísticas</a>
+            </div>
+        </div>
+    {% empty %}
+        <p>No has creado ningún evento todavía.</p>
+    {% endfor %}
+</div>
 {% endblock %}
