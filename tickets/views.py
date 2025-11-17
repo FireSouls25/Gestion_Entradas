@@ -53,12 +53,15 @@ def purchase_ticket_view(request, event_id):
                 messages.success(request, 'Compra de entradas exitosa!')
                 return redirect('tickets:my-tickets') # Redirect to my tickets page
             else:
-                messages.error(request, f'Error en el pago: {payment_result['error']}')
+                messages.error(request, f'Error en el pago: {payment_result['error']}', extra_tags='ticket_purchase_error')
         else:
-            messages.error(request, 'Por favor, corrige los errores del formulario.')
+            messages.error(request, 'Por favor, corrige los errores del formulario.', extra_tags='form_error')
     else:
         form = TicketPurchaseForm()
         form.fields['ticket_type'].queryset = ticket_types
+        # Clear all messages on GET request to prevent old messages from showing up
+        for message in messages.get_messages(request):
+            pass # Consume messages to clear them
 
     return render(request, 'tickets/purchase_ticket.html', {'form': form, 'event': event, 'ticket_types': ticket_types})
 

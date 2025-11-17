@@ -42,13 +42,17 @@
     {% if user.is_authenticated and user.userprofile.role == 'client' %}
         <div class="mt-6">
             <h2 class="text-xl font-bold">Comprar Entradas</h2>
-            <form method="post" action="{% url 'tickets:purchase-ticket' event.pk %}" class="space-y-4">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <div>
-                    <button type="submit" class="px-4 py-2 font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700">Comprar</button>
-                </div>
-            </form>
+            {% if event.tickettype_set.all %}
+                <form method="post" action="{% url 'tickets:purchase-ticket' event.pk %}" class="space-y-4">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div>
+                        <button type="submit" class="px-4 py-2 font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700">Comprar</button>
+                    </div>
+                </form>
+            {% else %}
+                <p class="text-gray-500">No hay tipos de entrada disponibles para este evento.</p>
+            {% endif %}
         </div>
         {% if user_tickets %}
             <div class="mt-6">
