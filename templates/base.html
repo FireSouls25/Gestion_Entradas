@@ -14,13 +14,15 @@
                 <h1 class="text-2xl font-bold text-purple-700">Business</h1>
             </div>
              <nav class="mt-6">
-                {% if user.is_authenticated and user.userprofile.role == 'organizer' %}
+                {% if user.is_authenticated and user.userprofile.role != 'client' %}
                     <a href="{% url 'dashboard:dashboard' %}" class="block px-6 py-2.5 text-gray-700 hover:bg-purple-100 hover:text-purple-700">Analíticas</a>
                 {% endif %}
                 <a href="{% url 'events:event-list' %}" class="block px-6 py-2.5 text-gray-700 hover:bg-purple-100 hover:text-purple-700">Eventos</a>
-                {% if user.is_authenticated and user.userprofile.role == 'organizer' %}
-                    <a href="#" class="block px-6 py-2.5 text-gray-700 hover:bg-purple-100 hover:text-purple-700">Clientes</a>
-                    <a href="#" class="block px-6 py-2.5 text-gray-700 hover:bg-purple-100 hover:text-purple-700">Configuración</a>
+                {% if user.is_authenticated and user.userprofile.role != 'client' %}
+                    <a href="{% url 'users:client-list' %}" class="block px-6 py-2.5 text-gray-700 hover:bg-purple-100 hover:text-purple-700">Clientes</a>
+                {% endif %}
+                {% if user.is_authenticated %}
+                    <a href="{% url 'users:settings' %}" class="block px-6 py-2.5 text-gray-700 hover:bg-purple-100 hover:text-purple-700">Configuración</a>
                 {% endif %}
                 {% if user.is_authenticated %}
                     <a href="{% url 'users:logout' %}" class="block px-6 py-2.5 text-gray-700 hover:bg-purple-100 hover:text-purple-700">Cerrar Sesión</a>

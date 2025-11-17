@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Configuración{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold">Configuración de la Cuenta</h1>
+
+<div class="mt-6 p-6 bg-white rounded-lg shadow-md">
+    <h2 class="text-xl font-bold text-red-600">Eliminar Cuenta</h2>
+    <p class="mt-2 text-gray-700">Al eliminar tu cuenta, se borrarán todos tus datos de forma permanente. Esta acción no se puede deshacer.</p>
+    <form method="post" action="{% url 'users:delete-account' %}" class="mt-4">
+        {% csrf_token %}
+        <button type="submit" class="px-4 py-2 font-medium text-white bg-red-600 rounded-md hover:bg-red-700" onclick="return confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible.');">Eliminar mi cuenta</button>
+    </form>
+</div>
+{% endblock %}

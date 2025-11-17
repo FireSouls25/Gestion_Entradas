@@ -3,8 +3,30 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from .forms import CustomUserCreationForm
-
+from .models import UserProfile
 from django.views.decorators.cache import never_cache
+from django.contrib.auth.decorators import login_required, user_passes_test
+
+def is_organizer_or_attendee(user):
+    return user.is_authenticated and (user.userprofile.role == 'organizer' or user.userprofile.role == 'attendee')
+
+@login_required
+@user_passes_test(is_organizer_or_attendee)
+def client_list_view(request):
+    clients = UserProfile.objects.filter(role='client')
+    return render(request, 'users/client_list.html', {'clients': clients})
+
+@login_required
+def settings_view(request):
+    return render(request, 'users/settings.html')
+
+@login_required
+def delete_account_view(request):
+    if request.method == 'POST':
+        request.user.delete()
+        messages.success(request, 'Tu cuenta ha sido eliminada exitosamente.')
+        return redirect('users:login')
+    return redirect('users:settings')
 
 @never_cache
 def register_view(request):
