@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis Entradas{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold">Mis Entradas</h1>
+
+<div class="mt-6">
+    {% if tickets %}
+        <ul class="bg-white shadow-md rounded-lg divide-y divide-gray-200">
+            {% for ticket in tickets %}
+                <li class="p-4 flex justify-between items-center">
+                    <div>
+                        <p class="text-lg font-medium text-gray-900">{{ ticket.ticket_type.event.title }}</p>
+                        <p class="text-sm text-gray-500">Tipo: {{ ticket.ticket_type.name }}</p>
+                        <p class="text-sm text-gray-500">Comprada el: {{ ticket.purchase_time }}</p>
+                        <p class="text-sm text-gray-500">Estado: {% if ticket.is_validated %}Validada{% else %}No Validada{% endif %}</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <img src="{% url 'tickets:generate-qr-code' ticket.id %}" alt="QR Code" class="w-24 h-24">
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aún no has comprado ninguna entrada.</p>
+    {% endif %}
+</div>
+{% endblock %}

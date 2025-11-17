@@ -1,8 +1,8 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
-from .models import Event, Location
-from .forms import EventForm, LocationForm
+from .models import Event, Location, TicketType
+from .forms import EventForm, LocationForm, TicketTypeForm
 from tickets.models import Ticket
 
 class OrganizerRequiredMixin(UserPassesTestMixin):
@@ -84,3 +84,31 @@ class LocationDeleteView(LoginRequiredMixin, OrganizerRequiredMixin, DeleteView)
     model = Location
     template_name = 'events/location_confirm_delete.html'
     success_url = reverse_lazy('events:location-list')
+
+# TicketType CRUD Views
+class TicketTypeCreateView(LoginRequiredMixin, OrganizerRequiredMixin, CreateView):
+    model = TicketType
+    form_class = TicketTypeForm
+    template_name = 'events/ticket_type_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('events:event-detail', kwargs={'pk': self.object.event.pk})
+
+    def form_valid(self, form):
+        form.instance.event = Event.objects.get(pk=self.kwargs['event_pk'])
+        return super().form_valid(form)
+
+class TicketTypeUpdateView(LoginRequiredMixin, OrganizerRequiredMixin, UpdateView):
+    model = TicketType
+    form_class = TicketTypeForm
+    template_name = 'events/ticket_type_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('events:event-detail', kwargs={'pk': self.object.event.pk})
+
+class TicketTypeDeleteView(LoginRequiredMixin, OrganizerRequiredMixin, DeleteView):
+    model = TicketType
+    template_name = 'events/ticket_type_confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse_lazy('events:event-detail', kwargs={'pk': self.object.event.pk})

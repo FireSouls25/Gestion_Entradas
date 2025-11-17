@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirmar Eliminación de Tipo de Entrada{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold">¿Estás seguro de que quieres eliminar el tipo de entrada "{{ object.name }}"?</h1>
+<form method="post" class="mt-8">
+    {% csrf_token %}
+    <button type="submit" class="px-4 py-2 font-medium text-white bg-red-600 rounded-md hover:bg-red-700">Confirmar</button>
+    <a href="{% url 'events:event-detail' object.event.pk %}" class="ml-4 font-medium text-gray-600 hover:text-gray-500">Cancelar</a>
+</form>
+{% endblock %}

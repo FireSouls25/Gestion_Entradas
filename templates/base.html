@@ -24,6 +24,9 @@
                 {% if user.is_authenticated and user.userprofile.role != 'client' %}
                     <a href="{% url 'users:client-list' %}" class="block px-6 py-2.5 text-gray-700 hover:bg-purple-100 hover:text-purple-700">Clientes</a>
                 {% endif %}
+                {% if user.is_authenticated and user.userprofile.role == 'client' %}
+                    <a href="{% url 'tickets:my-tickets' %}" class="block px-6 py-2.5 text-gray-700 hover:bg-purple-100 hover:text-purple-700">Mis Entradas</a>
+                {% endif %}
                 {% if user.is_authenticated %}
                     <a href="{% url 'users:settings' %}" class="block px-6 py-2.5 text-gray-700 hover:bg-purple-100 hover:text-purple-700">Configuración</a>
                 {% endif %}
