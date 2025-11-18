@@ -7,21 +7,75 @@
 
 <div class="mt-6">
     {% if tickets %}
-        <ul class="bg-white shadow-md rounded-lg divide-y divide-gray-200">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {% for ticket in tickets %}
-                <li class="p-4 flex justify-between items-center">
-                    <div>
-                        <p class="text-lg font-medium text-gray-900">{{ ticket.ticket_type.event.title }}</p>
-                        <p class="text-sm text-gray-500">Tipo: {{ ticket.ticket_type.name }}</p>
-                        <p class="text-sm text-gray-500">Comprada el: {{ ticket.purchase_time }}</p>
-                        <p class="text-sm text-gray-500">Estado: {% if ticket.is_validated %}Validada{% else %}No Validada{% endif %}</p>
-                    </div>
-                    <div class="flex space-x-2">
+                <div class="ticket-card bg-white shadow-md rounded-lg p-4 cursor-pointer" data-ticket-id="{{ ticket.id }}">
+                    <h2 class="text-lg font-medium text-gray-900">{{ ticket.ticket_type.event.title }}</h2>
+                    <p class="text-sm text-gray-500">Tipo: {{ ticket.ticket_type.name }}</p>
+                    <p class="text-sm text-gray-500">Comprada el: {{ ticket.purchase_time }}</p>
+                    <p class="text-sm text-gray-500">Estado: {% if ticket.is_validated %}Validada{% else %}No Validada{% endif %}</p>
+                    <div class="mt-4 flex justify-center">
                         <img src="{% url 'tickets:generate-qr-code' ticket.id %}" alt="QR Code" class="w-24 h-24">
                     </div>
-                </li>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
+
+        <!-- Modal para ver el ticket en detalle -->
+        <div id="ticketModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-lg p-8 max-w-lg w-full mx-auto relative">
+                <button id="closeModal" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-2xl font-bold">&times;</button>
+                <h2 id="modalEventTitle" class="text-2xl font-bold text-center mb-4"></h2>
+                <p id="modalTicketType" class="text-lg text-gray-700 text-center"></p>
+                <p id="modalPurchaseTime" class="text-md text-gray-600 text-center"></p>
+                <p id="modalStatus" class="text-md text-gray-600 text-center mb-6"></p>
+                <div id="modalQrCode" class="flex justify-center">
+                    <!-- QR code will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const ticketCards = document.querySelectorAll('.ticket-card');
+                const ticketModal = document.getElementById('ticketModal');
+                const closeModal = document.getElementById('closeModal');
+                const modalEventTitle = document.getElementById('modalEventTitle');
+                const modalTicketType = document.getElementById('modalTicketType');
+                const modalPurchaseTime = document.getElementById('modalPurchaseTime');
+                const modalStatus = document.getElementById('modalStatus');
+                const modalQrCode = document.getElementById('modalQrCode');
+
+                ticketCards.forEach(card => {
+                    card.addEventListener('click', function() {
+                        const ticketId = this.dataset.ticketId;
+                        const eventTitle = this.querySelector('h2').textContent;
+                        const ticketType = this.querySelector('p:nth-of-type(1)').textContent;
+                        const purchaseTime = this.querySelector('p:nth-of-type(2)').textContent;
+                        const status = this.querySelector('p:nth-of-type(3)').textContent;
+                        const qrCodeSrc = this.querySelector('img').src;
+
+                        modalEventTitle.textContent = eventTitle;
+                        modalTicketType.textContent = ticketType;
+                        modalPurchaseTime.textContent = purchaseTime;
+                        modalStatus.textContent = status;
+                        modalQrCode.innerHTML = `<img src="${qrCodeSrc}" alt="QR Code" class="w-64 h-64">`;
+                        ticketModal.classList.remove('hidden');
+                    });
+                });
+
+                closeModal.addEventListener('click', function() {
+                    ticketModal.classList.add('hidden');
+                });
+
+                ticketModal.addEventListener('click', function(e) {
+                    if (e.target === ticketModal) {
+                        ticketModal.classList.add('hidden');
+                    }
+                });
+            });
+        </script>
+
     {% else %}
         <p>Aún no has comprado ninguna entrada.</p>
     {% endif %}
