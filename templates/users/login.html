@@ -33,7 +33,12 @@
             Iniciar Sesión
         </button>
     </div>
-    <p class="text-sm text-center">
+    <div class="text-sm text-center mt-4">
+        <a href="{% url 'users:password_reset' %}" class="font-medium text-purple-600 hover:text-purple-500">
+            ¿Olvidaste tu contraseña?
+        </a>
+    </div>
+    <p class="text-sm text-center mt-4">
         ¿No tienes una cuenta? <a href="{% url 'users:register' %}" class="font-medium text-purple-600 hover:text-purple-500">Regístrate</a>
     </p>
 </form>

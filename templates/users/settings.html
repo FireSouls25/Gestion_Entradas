@@ -5,6 +5,31 @@
 {% block content %}
 <h1 class="text-2xl font-bold">Configuración de la Cuenta</h1>
 
+{% load form_filters %}
+
+<div class="mt-6 p-6 bg-white rounded-lg shadow-md">
+    <h2 class="text-xl font-bold">Modificar Datos</h2>
+    <form method="post" class="mt-4 space-y-4">
+        {% csrf_token %}
+        <div>
+            <label for="id_username" class="block text-sm font-medium text-gray-700">Nombre de usuario</label>
+            {{ form.username|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm" }}
+        </div>
+        <div>
+            <label for="id_email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+            {{ form.email|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm" }}
+        </div>
+        <button type="submit" class="px-4 py-2 font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700">Guardar Cambios</button>
+    </form>
+</div>
+        <div>
+            <label for="id_email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+            {{ form.email }}
+        </div>
+        <button type="submit" class="px-4 py-2 font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700">Guardar Cambios</button>
+    </form>
+</div>
+
 <div class="mt-6 p-6 bg-white rounded-lg shadow-md">
     <h2 class="text-xl font-bold text-red-600">Eliminar Cuenta</h2>
     <p class="mt-2 text-gray-700">Al eliminar tu cuenta, se borrarán todos tus datos de forma permanente. Esta acción no se puede deshacer.</p>

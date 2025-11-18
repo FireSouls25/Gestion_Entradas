@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, UserUpdateForm
 from .models import UserProfile
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -18,7 +18,15 @@ def client_list_view(request):
 
 @login_required
 def settings_view(request):
-    return render(request, 'users/settings.html')
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Tu perfil ha sido actualizado exitosamente.')
+            return redirect('users:settings')
+    else:
+        form = UserUpdateForm(instance=request.user)
+    return render(request, 'users/settings.html', {'form': form})
 
 @login_required
 def delete_account_view(request):
@@ -39,8 +47,6 @@ def register_view(request):
     else:
         form = CustomUserCreationForm()
     return render(request, 'users/register.html', {'form': form})
-
-from django.template import RequestContext
 
 @never_cache
 def login_view(request):
