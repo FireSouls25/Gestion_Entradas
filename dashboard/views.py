@@ -4,6 +4,10 @@ from events.models import Event, TicketType
 from tickets.models import Ticket
 from django.db.models import Count, Sum, F
 from django.contrib import messages
+from django.conf import settings
+import hmac
+import hashlib
+import base64
 
 @login_required
 def dashboard_view(request):
@@ -66,17 +70,43 @@ def attendee_event_dashboard_view(request, event_id):
     event = get_object_or_404(Event, id=event_id, assistants=request.user)
     
     if request.method == 'POST':
-        ticket_id = request.POST.get('ticket_id')
-        try:
-            ticket = Ticket.objects.get(id=ticket_id, ticket_type__event=event)
-            if not ticket.is_validated:
-                ticket.is_validated = True
-                ticket.save()
-                messages.success(request, f'Ticket {ticket.id} validado exitosamente.')
+        code = (request.POST.get('ticket_id') or '').strip()
+        if code.startswith('TKT1|'):
+            parts = code.split('|')
+            if len(parts) == 5:
+                data = '|'.join(parts[:-1])
+                sig = parts[-1]
+                expected = base64.urlsafe_b64encode(hmac.new(settings.SECRET_KEY.encode(), data.encode(), hashlib.sha256).digest()).decode().rstrip('=')
+                if hmac.compare_digest(sig, expected):
+                    _, event_part, ticket_part, _ = parts[:4]
+                    if str(event.id) == event_part:
+                        try:
+                            ticket = Ticket.objects.get(id=int(ticket_part), ticket_type__event=event)
+                            if not ticket.is_validated:
+                                ticket.is_validated = True
+                                ticket.save()
+                                messages.success(request, f'Ticket {ticket.id} validado exitosamente.')
+                            else:
+                                messages.warning(request, f'El ticket {ticket.id} ya ha sido validado.')
+                        except Ticket.DoesNotExist:
+                            messages.error(request, 'El ticket no existe para este evento.')
+                    else:
+                        messages.error(request, 'El código QR pertenece a otro evento.')
+                else:
+                    messages.error(request, 'Código QR inválido.')
             else:
-                messages.warning(request, f'El ticket {ticket.id} ya ha sido validado.')
-        except Ticket.DoesNotExist:
-            messages.error(request, 'El ID del ticket no es válido para este evento.')
+                messages.error(request, 'Formato de código QR no reconocido.')
+        else:
+            try:
+                ticket = Ticket.objects.get(id=code, ticket_type__event=event)
+                if not ticket.is_validated:
+                    ticket.is_validated = True
+                    ticket.save()
+                    messages.success(request, f'Ticket {ticket.id} validado exitosamente.')
+                else:
+                    messages.warning(request, f'El ticket {ticket.id} ya ha sido validado.')
+            except Ticket.DoesNotExist:
+                messages.error(request, 'El ID del ticket no es válido para este evento.')
         return redirect('dashboard:attendee-event-dashboard', event_id=event.id)
 
     tickets_sold = Ticket.objects.filter(ticket_type__event=event).count()

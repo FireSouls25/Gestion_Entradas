@@ -1,4 +1,8 @@
 import qrcode
+import hmac
+import hashlib
+import base64
+import os
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Ticket
@@ -7,6 +11,7 @@ from events.forms import TicketPurchaseForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 import random
+from django.conf import settings
 
 @login_required
 def my_tickets_view(request, event_id=None):
@@ -44,10 +49,14 @@ def purchase_ticket_view(request, event_id):
 
             if payment_result['status'] == 'success':
                 for _ in range(quantity):
-                    Ticket.objects.create(
+                    t = Ticket.objects.create(
                         attendee=request.user,
                         ticket_type=ticket_type,
                     )
+                    payload_base = f"TKT1|{t.ticket_type.event.id}|{t.id}|{base64.urlsafe_b64encode(os.urandom(8)).decode().rstrip('=')}"
+                    sig = base64.urlsafe_b64encode(hmac.new(settings.SECRET_KEY.encode(), payload_base.encode(), hashlib.sha256).digest()).decode().rstrip('=')
+                    t.qr_code = f"{payload_base}|{sig}"
+                    t.save(update_fields=["qr_code"])
                 ticket_type.quantity -= quantity
                 ticket_type.save()
                 messages.success(request, 'Compra de entradas exitosa!')
@@ -67,13 +76,18 @@ def purchase_ticket_view(request, event_id):
 
 def generate_qr_code(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
+    if not ticket.qr_code:
+        payload_base = f"TKT1|{ticket.ticket_type.event.id}|{ticket.id}|{base64.urlsafe_b64encode(os.urandom(8)).decode().rstrip('=')}"
+        sig = base64.urlsafe_b64encode(hmac.new(settings.SECRET_KEY.encode(), payload_base.encode(), hashlib.sha256).digest()).decode().rstrip('=')
+        ticket.qr_code = f"{payload_base}|{sig}"
+        ticket.save(update_fields=["qr_code"])
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
         box_size=10,
         border=4,
     )
-    qr.add_data(f"Ticket ID: {ticket.id}\nAttendee: {ticket.attendee.username}\nEvent: {ticket.ticket_type.event.title}")
+    qr.add_data(ticket.qr_code)
     qr.make(fit=True)
 
     img = qr.make_image(fill_color="black", back_color="white")
