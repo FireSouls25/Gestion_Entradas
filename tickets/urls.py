@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import generate_qr_code, validate_ticket, purchase_ticket_view, my_tickets_view
+from .views import generate_qr_code, validate_ticket, purchase_ticket_view, my_tickets_view, cancel_ticket
 
 app_name = 'tickets'
 

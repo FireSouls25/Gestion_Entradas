@@ -124,6 +124,15 @@ def join_event_as_assistant(request, event_id):
     if request.method == 'POST':
         event.assistants.add(request.user)
         messages.success(request, f'Ahora eres asistente del evento "{event.title}".')
-        return redirect('events:event-list')
+    return redirect('events:event-list')
+
+@login_required
+@user_passes_test(is_attendee)
+def cancel_event_assistance(request, event_id):
+    event = get_object_or_404(Event, id=event_id, assistants=request.user)
+    if request.method == 'POST':
+        event.assistants.remove(request.user)
+        messages.success(request, f'Has cancelado tu asistencia al evento "{event.title}".')
+    return redirect('dashboard:dashboard')
     # It's good practice to handle GET requests gracefully, even if not expected
     return redirect('events:event-list')

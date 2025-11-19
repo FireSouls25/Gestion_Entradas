@@ -120,3 +120,14 @@ def validate_ticket(request, ticket_id):
             return redirect('tickets:my-tickets')
     
     return render(request, 'tickets/validate_ticket.html', {'ticket': ticket})
+
+@login_required
+def cancel_ticket(request, ticket_id):
+    ticket = get_object_or_404(Ticket, id=ticket_id, attendee=request.user)
+    if request.method == 'POST':
+        ticket_type = ticket.ticket_type
+        ticket.delete()
+        ticket_type.quantity += 1
+        ticket_type.save()
+        messages.success(request, 'Tu compra de entrada ha sido cancelada exitosamente.')
+    return redirect('tickets:my-tickets')
