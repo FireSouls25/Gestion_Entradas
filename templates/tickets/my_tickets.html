@@ -14,9 +14,14 @@
                     <p class="text-sm text-gray-500">Tipo: {{ ticket.ticket_type.name }}</p>
                     <p class="text-sm text-gray-500">Comprada el: {{ ticket.purchase_time }}</p>
                     <p class="text-sm text-gray-500">Estado: {% if ticket.is_validated %}Validada{% else %}No Validada{% endif %}</p>
-                    <div class="mt-4 flex justify-center">
-                        <img src="{% url 'tickets:generate-qr-code' ticket.id %}" alt="QR Code" class="w-24 h-24">
-                    </div>
+                     <div class="mt-4 flex justify-center">
+                         <img src="{% url 'tickets:generate-qr-code' ticket.id %}" alt="QR Code" class="w-24 h-24">
+                     </div>
+                     {% if not ticket.is_validated and user.userprofile.role == 'attendee' %}
+                     <div class="mt-4 flex justify-center">
+                         <a href="{% url 'tickets:validate-ticket' ticket.id %}" class="px-4 py-2 font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">Validar</a>
+                     </div>
+                     {% endif %}
                 </div>
             {% endfor %}
         </div>

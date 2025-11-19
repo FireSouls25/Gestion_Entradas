@@ -3,50 +3,177 @@
 {% block title %}Estadísticas del Evento: {{ event.title }}{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-bold">Estadísticas del Evento: {{ event.title }}</h1>
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">Estadísticas del Evento: {{ event.title }}</h1>
+    <a href="{% url 'reports:export-attendees-excel' event.id %}" class="px-4 py-2 font-medium text-white bg-green-600 rounded-md hover:bg-green-700">
+        <i class="fas fa-file-excel"></i> Exportar Asistentes
+    </a>
+</div>
 
-<div class="grid grid-cols-1 gap-6 mt-6 md:grid-cols-2">
-    <div class="p-6 bg-white rounded-lg shadow-md">
-        <h2 class="text-xl font-bold">Entradas Vendidas</h2>
-        <p class="mt-2 text-3xl font-bold">{{ tickets_sold }}</p>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Card 1: Tickets Vendidos vs. Disponibles -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold">Tickets Vendidos vs. Disponibles</h2>
+            <button onclick="expandChart('chartTicketsSold')" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-expand"></i>
+            </button>
+        </div>
+        <canvas id="chartTicketsSold"></canvas>
     </div>
-    <div class="p-6 bg-white rounded-lg shadow-md">
-        <h2 class="text-xl font-bold">Asistentes</h2>
-        <p class="mt-2 text-3xl font-bold">{{ attendees }}</p>
+
+    <!-- Card 2: Tickets Validados vs. No Validados -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold">Tickets Validados</h2>
+            <button onclick="expandChart('chartTicketsValidated')" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-expand"></i>
+            </button>
+        </div>
+        <canvas id="chartTicketsValidated"></canvas>
+    </div>
+
+    <!-- Card 3: Ingresos por Tipo de Ticket -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold">Ingresos por Tipo de Ticket</h2>
+            <button onclick="expandChart('chartRevenue')" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-expand"></i>
+            </button>
+        </div>
+        <canvas id="chartRevenue"></canvas>
     </div>
 </div>
 
-<div class="mt-8">
-    <a href="{% url 'reports:export-attendees-excel' event.id %}" class="px-4 py-2 font-medium text-white bg-green-600 rounded-md hover:bg-green-700">Exportar Asistentes a Excel</a>
-</div>
-
-<div class="mt-8">
-    <h2 class="text-xl font-bold">Entradas por Tipo</h2>
-    <canvas id="ticketsByTypeChart"></canvas>
+<!-- Modal para expandir gráfico -->
+<div id="chartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-11/12 h-5/6 relative">
+        <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
+        <canvas id="modalChart"></canvas>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const ctx = document.getElementById('ticketsByTypeChart').getContext('2d');
-    const ticketsByTypeChart = new Chart(ctx, {
-        type: 'bar',
+    // Datos del backend
+    const ticketsSold = {{ tickets_sold }};
+    const ticketsAvailable = {{ tickets_available }};
+    const validatedTickets = {{ validated_tickets }};
+    const notValidatedTickets = {{ not_validated_tickets }};
+    const revenueLabels = [{% for item in revenue_by_ticket_type %}"{{ item.ticket_type__name }}",{% endfor %}];
+    const revenueData = [{% for item in revenue_by_ticket_type %}{{ item.revenue }},{% endfor %}];
+
+    // Gráfico 1: Tickets Vendidos vs. Disponibles (Pie Chart)
+    const ctxSold = document.getElementById('chartTicketsSold').getContext('2d');
+    const chartTicketsSold = new Chart(ctxSold, {
+        type: 'pie',
         data: {
-            labels: [{% for item in tickets_by_type %}"{{ item.ticket_type__name }}",{% endfor %}],
+            labels: ['Vendidos', 'Disponibles'],
             datasets: [{
-                label: 'Entradas Vendidas',
-                data: [{% for item in tickets_by_type %}{{ item.count }},{% endfor %}],
-                backgroundColor: 'rgba(128, 0, 128, 0.2)',
-                borderColor: 'rgba(128, 0, 128, 1)',
+                data: [ticketsSold, ticketsAvailable],
+                backgroundColor: ['rgba(128, 0, 128, 0.7)', 'rgba(211, 211, 211, 0.7)'],
+                borderColor: ['rgba(128, 0, 128, 1)', 'rgba(211, 211, 211, 1)'],
                 borderWidth: 1
             }]
         },
         options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Estado de los Tickets'
                 }
             }
         }
     });
+
+    // Gráfico 2: Tickets Validados vs. No Validados (Doughnut Chart)
+    const ctxValidated = document.getElementById('chartTicketsValidated').getContext('2d');
+    const chartTicketsValidated = new Chart(ctxValidated, {
+        type: 'doughnut',
+        data: {
+            labels: ['Validados', 'No Validados'],
+            datasets: [{
+                data: [validatedTickets, notValidatedTickets],
+                backgroundColor: ['rgba(75, 192, 192, 0.7)', 'rgba(255, 99, 132, 0.7)'],
+                borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Estado de Validación de Tickets'
+                }
+            }
+        }
+    });
+
+    // Gráfico 3: Ingresos por Tipo de Ticket (Bar Chart)
+    const ctxRevenue = document.getElementById('chartRevenue').getContext('2d');
+    const chartRevenue = new Chart(ctxRevenue, {
+        type: 'bar',
+        data: {
+            labels: revenueLabels,
+            datasets: [{
+                label: 'Ingresos ($)',
+                data: revenueData,
+                backgroundColor: 'rgba(153, 102, 255, 0.7)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Ingresos Generados por Tipo de Ticket'
+                }
+            }
+        }
+    });
+
+    // Funcionalidad del Modal
+    const modal = document.getElementById('chartModal');
+    const modalChartCtx = document.getElementById('modalChart').getContext('2d');
+    let modalChart;
+
+    function expandChart(chartId) {
+        const originalChart = Chart.getChart(chartId);
+        if (modalChart) {
+            modalChart.destroy();
+        }
+        modalChart = new Chart(modalChartCtx, {
+            type: originalChart.config.type,
+            data: originalChart.config.data,
+            options: {
+                ...originalChart.config.options,
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+        modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+        modal.classList.add('hidden');
+    }
 </script>
 {% endblock %}

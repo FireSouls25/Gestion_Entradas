@@ -85,7 +85,10 @@ def generate_qr_code(request, ticket_id):
 def is_organizer(user):
     return user.is_authenticated and user.userprofile.role == 'organizer'
 
-@user_passes_test(is_organizer)
+def is_organizer_or_attendee(user):
+    return user.is_authenticated and (user.userprofile.role == 'organizer' or user.userprofile.role == 'attendee')
+
+@user_passes_test(is_organizer_or_attendee)
 def validate_ticket(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
     if request.method == 'POST':
@@ -95,6 +98,11 @@ def validate_ticket(request, ticket_id):
             messages.success(request, 'Entrada validada exitosamente.')
         else:
             messages.warning(request, 'Esta entrada ya ha sido validada.')
-        return redirect('events:event-detail', pk=ticket.ticket_type.event.pk)
+        
+        # Redirect based on user role
+        if request.user.userprofile.role == 'organizer':
+            return redirect('events:event-detail', pk=ticket.ticket_type.event.pk)
+        else:
+            return redirect('tickets:my-tickets')
     
     return render(request, 'tickets/validate_ticket.html', {'ticket': ticket})
