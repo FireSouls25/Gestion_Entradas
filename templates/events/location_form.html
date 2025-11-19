@@ -22,6 +22,13 @@
                 <p class="text-red-500 text-xs italic font-bold">{% for error in form.address.errors %}{{ error }}{% endfor %}</p>
             {% endif %}
         </div>
+        <div class="mb-4">
+            <label for="id_capacity" class="sr-only">Capacidad</label>
+            {{ form.capacity|add_attr:"relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm,placeholder:Capacidad de la ubicación" }}
+            {% if form.capacity.errors %}
+                <p class="text-red-500 text-xs italic font-bold">{% for error in form.capacity.errors %}{{ error }}{% endfor %}</p>
+            {% endif %}
+        </div>
     </div>
     <div>
         <button type="submit" class="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md group hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
