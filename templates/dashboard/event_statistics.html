@@ -3,19 +3,19 @@
 {% block title %}Estadísticas del Evento: {{ event.title }}{% endblock %}
 
 {% block content %}
-<div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold">Estadísticas del Evento: {{ event.title }}</h1>
-    <a href="{% url 'reports:export-attendees-excel' event.id %}" class="px-4 py-2 font-medium text-white bg-green-600 rounded-md hover:bg-green-700">
+<div class="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-6">
+    <h1 class="text-xl sm:text-2xl font-bold mb-2 sm:mb-0">Estadísticas del Evento: {{ event.title }}</h1>
+    <a href="{% url 'reports:export-attendees-excel' event.id %}" class="px-3 py-1.5 sm:px-4 sm:py-2 font-medium text-white bg-green-600 rounded-md hover:bg-green-700 text-sm">
         <i class="fas fa-file-excel"></i> Exportar Excel
     </a>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
     <!-- Card 1: Tickets Vendidos vs. Disponibles -->
-    <div class="bg-white p-6 rounded-lg shadow-md">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold">Tickets Vendidos vs. Disponibles</h2>
-            <button onclick="expandChart('chartTicketsSold')" class="text-gray-500 hover:text-gray-700">
+    <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+        <div class="flex justify-between items-center mb-3 sm:mb-4">
+            <h2 class="text-lg sm:text-xl font-bold">Tickets Vendidos vs. Disponibles</h2>
+            <button onclick="expandChart('chartTicketsSold')" class="text-gray-500 hover:text-gray-700 text-base sm:text-lg">
                 <i class="fas fa-expand"></i>
             </button>
         </div>
@@ -23,10 +23,10 @@
     </div>
 
     <!-- Card 2: Tickets Validados vs. No Validados -->
-    <div class="bg-white p-6 rounded-lg shadow-md">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold">Tickets Validados</h2>
-            <button onclick="expandChart('chartTicketsValidated')" class="text-gray-500 hover:text-gray-700">
+    <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+        <div class="flex justify-between items-center mb-3 sm:mb-4">
+            <h2 class="text-lg sm:text-xl font-bold">Tickets Validados</h2>
+            <button onclick="expandChart('chartTicketsValidated')" class="text-gray-500 hover:text-gray-700 text-base sm:text-lg">
                 <i class="fas fa-expand"></i>
             </button>
         </div>
@@ -34,10 +34,10 @@
     </div>
 
     <!-- Card 3: Ingresos por Tipo de Ticket -->
-    <div class="bg-white p-6 rounded-lg shadow-md">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold">Ingresos por Tipo de Ticket</h2>
-            <button onclick="expandChart('chartRevenue')" class="text-gray-500 hover:text-gray-700">
+    <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+        <div class="flex justify-between items-center mb-3 sm:mb-4">
+            <h2 class="text-lg sm:text-xl font-bold">Ingresos por Tipo de Ticket</h2>
+            <button onclick="expandChart('chartRevenue')" class="text-gray-500 hover:text-gray-700 text-base sm:text-lg">
                 <i class="fas fa-expand"></i>
             </button>
         </div>
@@ -46,9 +46,9 @@
 </div>
 
 <!-- Modal para expandir gráfico -->
-<div id="chartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-11/12 h-5/6 relative">
-        <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
+<div id="chartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
+    <div class="bg-white p-6 sm:p-8 rounded-lg shadow-lg w-full max-w-3xl h-5/6 relative">
+        <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-xl sm:text-2xl font-bold">&times;</button>
         <canvas id="modalChart"></canvas>
     </div>
 </div>

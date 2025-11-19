@@ -3,23 +3,23 @@
 {% block title %}Mis Entradas{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-bold">Mis Entradas</h1>
+<h1 class="text-xl sm:text-2xl font-bold">Mis Entradas</h1>
 
-<div class="mt-6">
+<div class="mt-4 sm:mt-6">
     {% if tickets %}
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             {% for ticket in tickets %}
-                <div class="ticket-card bg-white shadow-md rounded-lg p-4 cursor-pointer" data-ticket-id="{{ ticket.id }}">
-                    <h2 class="text-lg font-medium text-gray-900">{{ ticket.ticket_type.event.title }}</h2>
-                    <p class="text-sm text-gray-500">Tipo: {{ ticket.ticket_type.name }}</p>
-                    <p class="text-sm text-gray-500">Comprada el: {{ ticket.purchase_time }}</p>
-                    <p class="text-sm text-gray-500">Estado: {% if ticket.is_validated %}Validada{% else %}No Validada{% endif %}</p>
-                     <div class="mt-4 flex justify-center">
-                         <img src="{% url 'tickets:generate-qr-code' ticket.id %}" alt="QR Code" class="w-24 h-24">
+                <div class="ticket-card bg-white shadow-md rounded-lg p-3 sm:p-4 cursor-pointer" data-ticket-id="{{ ticket.id }}">
+                    <h2 class="text-base sm:text-lg font-medium text-gray-900">{{ ticket.ticket_type.event.title }}</h2>
+                    <p class="text-xs sm:text-sm text-gray-500">Tipo: {{ ticket.ticket_type.name }}</p>
+                    <p class="text-xs sm:text-sm text-gray-500">Comprada el: {{ ticket.purchase_time }}</p>
+                    <p class="text-xs sm:text-sm text-gray-500">Estado: {% if ticket.is_validated %}Validada{% else %}No Validada{% endif %}</p>
+                     <div class="mt-3 sm:mt-4 flex justify-center">
+                         <img src="{% url 'tickets:generate-qr-code' ticket.id %}" alt="QR Code" class="w-20 h-20 sm:w-24 sm:h-24">
                      </div>
                      {% if not ticket.is_validated and user.userprofile.role == 'attendee' %}
-                     <div class="mt-4 flex justify-center">
-                         <a href="{% url 'tickets:validate-ticket' ticket.id %}" class="px-4 py-2 font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">Validar</a>
+                     <div class="mt-3 sm:mt-4 flex justify-center">
+                         <a href="{% url 'tickets:validate-ticket' ticket.id %}" class="px-3 py-1.5 sm:px-4 sm:py-2 font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 text-sm">Validar</a>
                      </div>
                      {% endif %}
                 </div>
@@ -27,13 +27,13 @@
         </div>
 
         <!-- Modal para ver el ticket en detalle -->
-        <div id="ticketModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 hidden">
-            <div class="bg-white rounded-lg p-8 max-w-lg w-full mx-auto relative">
-                <button id="closeModal" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-2xl font-bold">&times;</button>
-                <h2 id="modalEventTitle" class="text-2xl font-bold text-center mb-4"></h2>
-                <p id="modalTicketType" class="text-lg text-gray-700 text-center"></p>
-                <p id="modalPurchaseTime" class="text-md text-gray-600 text-center"></p>
-                <p id="modalStatus" class="text-md text-gray-600 text-center mb-6"></p>
+        <div id="ticketModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 hidden p-4">
+            <div class="bg-white rounded-lg p-6 sm:p-8 max-w-lg w-full mx-auto relative">
+                <button id="closeModal" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 text-xl sm:text-2xl font-bold">&times;</button>
+                <h2 id="modalEventTitle" class="text-xl sm:text-2xl font-bold text-center mb-3 sm:mb-4"></h2>
+                <p id="modalTicketType" class="text-base sm:text-lg text-gray-700 text-center"></p>
+                <p id="modalPurchaseTime" class="text-sm sm:text-md text-gray-600 text-center"></p>
+                <p id="modalStatus" class="text-sm sm:text-md text-gray-600 text-center mb-4 sm:mb-6"></p>
                 <div id="modalQrCode" class="flex justify-center">
                     <!-- QR code will be loaded here -->
                 </div>
@@ -53,7 +53,6 @@
 
                 ticketCards.forEach(card => {
                     card.addEventListener('click', function() {
-                        const ticketId = this.dataset.ticketId;
                         const eventTitle = this.querySelector('h2').textContent;
                         const ticketType = this.querySelector('p:nth-of-type(1)').textContent;
                         const purchaseTime = this.querySelector('p:nth-of-type(2)').textContent;
@@ -64,7 +63,7 @@
                         modalTicketType.textContent = ticketType;
                         modalPurchaseTime.textContent = purchaseTime;
                         modalStatus.textContent = status;
-                        modalQrCode.innerHTML = `<img src="${qrCodeSrc}" alt="QR Code" class="w-64 h-64">`;
+                        modalQrCode.innerHTML = `<img src="${qrCodeSrc}" alt="QR Code" class="w-48 h-48 sm:w-64 sm:h-64">`;
                         ticketModal.classList.remove('hidden');
                     });
                 });
@@ -82,7 +81,7 @@
         </script>
 
     {% else %}
-        <p>Aún no has comprado ninguna entrada.</p>
+        <p class="text-base">Aún no has comprado ninguna entrada.</p>
     {% endif %}
 </div>
 {% endblock %}

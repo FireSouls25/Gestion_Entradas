@@ -3,44 +3,44 @@
 {% block title %}Validar Entrada{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-8 mt-10">
-    <h1 class="text-2xl font-bold text-center mb-6">Validar Entrada</h1>
+<div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-4 mt-6 sm:p-8 sm:mt-10">
+    <h1 class="text-xl sm:text-2xl font-bold text-center mb-4 sm:mb-6">Validar Entrada</h1>
     
-    <div class="bg-gray-50 p-6 rounded-lg">
-        <div class="mb-4">
-            <p class="text-sm text-gray-600">Evento</p>
-            <p class="text-lg font-semibold">{{ ticket.ticket_type.event.title }}</p>
+    <div class="bg-gray-50 p-4 rounded-lg sm:p-6">
+        <div class="mb-3 sm:mb-4">
+            <p class="text-xs sm:text-sm text-gray-600">Evento</p>
+            <p class="text-base sm:text-lg font-semibold">{{ ticket.ticket_type.event.title }}</p>
         </div>
-        <div class="mb-4">
-            <p class="text-sm text-gray-600">Asistente</p>
-            <p class="text-lg font-semibold">{{ ticket.attendee.username }}</p>
+        <div class="mb-3 sm:mb-4">
+            <p class="text-xs sm:text-sm text-gray-600">Asistente</p>
+            <p class="text-base sm:text-lg font-semibold">{{ ticket.attendee.username }}</p>
         </div>
-        <div class="mb-4">
-            <p class="text-sm text-gray-600">Tipo de Entrada</p>
-            <p class="text-lg font-semibold">{{ ticket.ticket_type.name }}</p>
+        <div class="mb-3 sm:mb-4">
+            <p class="text-xs sm:text-sm text-gray-600">Tipo de Entrada</p>
+            <p class="text-base sm:text-lg font-semibold">{{ ticket.ticket_type.name }}</p>
         </div>
         <div>
-            <p class="text-sm text-gray-600">Estado</p>
-            <p class="text-lg font-semibold">
+            <p class="text-xs sm:text-sm text-gray-600">Estado</p>
+            <p class="text-base sm:text-lg font-semibold">
                 {% if ticket.is_validated %}
-                    <span class="px-3 py-1 text-sm font-medium text-white bg-green-600 rounded-full">Validada</span>
+                    <span class="px-2 py-0.5 text-xs sm:px-3 sm:py-1 text-sm font-medium text-white bg-green-600 rounded-full">Validada</span>
                 {% else %}
-                    <span class="px-3 py-1 text-sm font-medium text-white bg-red-600 rounded-full">No Validada</span>
+                    <span class="px-2 py-0.5 text-xs sm:px-3 sm:py-1 text-sm font-medium text-white bg-red-600 rounded-full">No Validada</span>
                 {% endif %}
             </p>
         </div>
     </div>
 
     {% if not ticket.is_validated %}
-    <form method="post" class="mt-8">
+    <form method="post" class="mt-6 sm:mt-8">
         {% csrf_token %}
-        <button type="submit" class="w-full px-4 py-2 font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+        <button type="submit" class="w-full px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
             Confirmar Validación
         </button>
     </form>
     {% else %}
-    <div class="mt-8 text-center">
-        <p class="text-lg text-gray-700">Esta entrada ya ha sido validada.</p>
+    <div class="mt-6 sm:mt-8 text-center">
+        <p class="text-base sm:text-lg text-gray-700">Esta entrada ya ha sido validada.</p>
     </div>
     {% endif %}
 </div>
