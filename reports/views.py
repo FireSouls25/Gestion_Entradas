@@ -49,8 +49,8 @@ def export_attendees_to_excel(request, event_id):
     df_revenue.rename(columns={'ticket_type__name': 'Tipo de Entrada', 'revenue': 'Ingresos'}, inplace=True)
 
     output = io.BytesIO()
-    workbook = xlsxwriter.Workbook(output, {'in_memory': True})
-    writer = pd.ExcelWriter(output, engine='xlsxwriter', workbook=workbook)
+    writer = pd.ExcelWriter(output, engine='xlsxwriter')
+    workbook = writer.book
 
     # Sheet 1: Attendees
     df_attendees.to_excel(writer, sheet_name='Asistentes', index=False, startrow=1, header=False)
