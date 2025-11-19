@@ -15,7 +15,8 @@ class Event(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
-    organizer = models.ForeignKey(User, on_delete=models.CASCADE)
+    organizer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='organized_events')
+    assistants = models.ManyToManyField(User, related_name='assisted_events', blank=True)
 
     def __str__(self):
         return str(self.title)

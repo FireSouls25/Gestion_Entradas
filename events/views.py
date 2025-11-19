@@ -1,3 +1,6 @@
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
@@ -109,3 +112,18 @@ class TicketTypeDeleteView(LoginRequiredMixin, OrganizerRequiredMixin, DeleteVie
 
     def get_success_url(self):
         return reverse_lazy('events:event-detail', kwargs={'pk': self.object.event.pk})
+
+# Attendee actions
+def is_attendee(user):
+    return user.is_authenticated and user.userprofile.role == 'attendee'
+
+@login_required
+@user_passes_test(is_attendee)
+def join_event_as_assistant(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    if request.method == 'POST':
+        event.assistants.add(request.user)
+        messages.success(request, f'Ahora eres asistente del evento "{event.title}".')
+        return redirect('events:event-list')
+    # It's good practice to handle GET requests gracefully, even if not expected
+    return redirect('events:event-list')

@@ -12,6 +12,7 @@ from .views import (
     TicketTypeCreateView,
     TicketTypeUpdateView,
     TicketTypeDeleteView,
+    join_event_as_assistant,
 )
 
 app_name = 'events'
@@ -31,4 +32,5 @@ urlpatterns = [
     path('event/<int:event_pk>/ticket-types/create/', TicketTypeCreateView.as_view(), name='ticket-type-create'),
     path('ticket-types/<int:pk>/update/', TicketTypeUpdateView.as_view(), name='ticket-type-update'),
     path('ticket-types/<int:pk>/delete/', TicketTypeDeleteView.as_view(), name='ticket-type-delete'),
+    path('<int:event_id>/join/', join_event_as_assistant, name='join-event'),
 ]

@@ -17,6 +17,16 @@
             <p class="mt-2 text-gray-600">{{ event.description|truncatewords:20 }}</p>
             <div class="mt-4">
                 <a href="{% url 'events:event-detail' event.pk %}" class="font-medium text-purple-600 hover:text-purple-500">Ver Detalles</a>
+                {% if user.is_authenticated and user.userprofile.role == 'attendee' %}
+                    {% if user in event.assistants.all %}
+                        <span class="ml-4 text-green-600 font-semibold">Ya eres asistente</span>
+                    {% else %}
+                        <form action="{% url 'events:join-event' event.id %}" method="post" class="inline ml-4">
+                            {% csrf_token %}
+                            <button type="submit" class="font-medium text-blue-600 hover:text-blue-500">Ser Asistente</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
             </div>
         </div>
     {% empty %}
