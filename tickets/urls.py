@@ -9,4 +9,5 @@ urlpatterns = [
     path('event/<int:event_id>/purchase/', purchase_ticket_view, name='purchase-ticket'),
     path('my-tickets/', my_tickets_view, name='my-tickets'),
     path('my-tickets/event/<int:event_id>/', my_tickets_view, name='my-tickets-event'),
+    path('<int:ticket_id>/cancel/', cancel_ticket, name='cancel-ticket'),
 ]
