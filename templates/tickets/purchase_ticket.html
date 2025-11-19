@@ -16,7 +16,7 @@
                 {% if field.help_text %}
                     <p class="mt-2 text-sm text-gray-500">{{ field.help_text }}</p>
                 {% endif %}
-                {% if form.is_bound and field.errors %}
+                {% if field.errors %}
                     {% for error in field.errors %}
                         <p class="mt-2 text-sm text-red-600">{{ error }}</p>
                     {% endfor %}
