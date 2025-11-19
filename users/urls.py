@@ -8,7 +8,7 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('register/', register_view, name='register'),
     path('logout/', logout_view, name='logout'),
-    path('clients/', client_list_view, name='client-list'),
+    path('users/', client_list_view, name='user-list'),
     path('settings/', settings_view, name='settings'),
     path('delete-account/', delete_account_view, name='delete-account'),
     path('password_reset/', auth_views.PasswordResetView.as_view(template_name='users/password_reset_form.html', success_url=reverse_lazy('users:password_reset_done')), name='password_reset'),

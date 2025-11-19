@@ -14,7 +14,8 @@ def is_organizer_or_attendee(user):
 @user_passes_test(is_organizer_or_attendee)
 def client_list_view(request):
     clients = UserProfile.objects.filter(role='client')
-    return render(request, 'users/client_list.html', {'clients': clients})
+    attendees = UserProfile.objects.filter(role='attendee')
+    return render(request, 'users/user_list.html', {'clients': clients, 'attendees': attendees})
 
 @login_required
 def settings_view(request):
