@@ -48,6 +48,7 @@ def purchase_ticket_view(request, event_id):
             payment_result = simulate_payment_api(total_amount)
 
             if payment_result['status'] == 'success':
+                purchased_tickets = []
                 for _ in range(quantity):
                     t = Ticket.objects.create(
                         attendee=request.user,
@@ -57,6 +58,7 @@ def purchase_ticket_view(request, event_id):
                     sig = base64.urlsafe_b64encode(hmac.new(settings.SECRET_KEY.encode(), payload_base.encode(), hashlib.sha256).digest()).decode().rstrip('=')
                     t.qr_code = f"{payload_base}|{sig}"
                     t.save(update_fields=["qr_code"])
+                    purchased_tickets.append(t)
                 ticket_type.quantity -= quantity
                 ticket_type.save()
                 messages.success(request, 'Compra de entradas exitosa!')

@@ -1,4 +1,6 @@
 from django import forms
+from django.core.exceptions import ValidationError
+from django.db.models import Sum
 from .models import Event, Location, TicketType
 
 class EventForm(forms.ModelForm):
@@ -17,6 +19,23 @@ class EventForm(forms.ModelForm):
             'end_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
 
+    def clean(self):
+        cleaned_data = super().clean()
+        location = cleaned_data.get('location')
+        
+        if location:
+            # For existing events, sum up existing ticket quantities
+            if self.instance.pk:
+                existing_tickets_quantity = TicketType.objects.filter(event=self.instance).aggregate(total_quantity=forms.Sum('quantity'))['total_quantity'] or 0
+            else:
+                existing_tickets_quantity = 0
+
+            # Check if the location's capacity is sufficient
+            if location.capacity < existing_tickets_quantity:
+                raise ValidationError(
+                    f'La capacidad de la ubicación ({location.capacity}) es menor que la cantidad de entradas ya creadas ({existing_tickets_quantity}).'
+                )
+        return cleaned_data
 class LocationForm(forms.ModelForm):
     class Meta:
         model = Location

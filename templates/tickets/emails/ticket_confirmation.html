@@ -1,0 +1,17 @@
+<p>Hola {{ user.username }},</p>
+
+<p>Gracias por tu compra de entradas para el evento <strong>{{ event.title }}</strong>.</p>
+
+<p>Detalles de tu compra:</p>
+<ul>
+    {% for ticket in tickets %}
+        <li><strong>Ticket:</strong> {{ ticket.ticket_type.name }} (ID: {{ ticket.id }})</li>
+    {% endfor %}
+</ul>
+
+<p>Puedes ver tus entradas en tu sección de <a href="{{ my_tickets_url }}">Mis Entradas</a>.</p>
+
+<p>¡Esperamos verte allí!</p>
+
+<p>Saludos,</p>
+<p>El equipo de Gestión de Entradas</p>
