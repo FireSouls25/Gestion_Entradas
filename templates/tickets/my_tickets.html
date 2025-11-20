@@ -3,23 +3,23 @@
 {% block title %}Mis Entradas{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-bold">Mis Entradas</h1>
+<h1 class="text-2xl font-semibold">Mis Entradas</h1>
 
 <div class="mt-6">
     {% if tickets %}
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {% for ticket in tickets %}
-                <div class="ticket-card bg-white shadow-md rounded-lg p-4 cursor-pointer" data-ticket-id="{{ ticket.id }}">
-                    <h2 class="text-lg font-medium text-gray-900">{{ ticket.ticket_type.event.title }}</h2>
-                    <p class="text-sm text-gray-500">Tipo: {{ ticket.ticket_type.name }}</p>
-                    <p class="text-sm text-gray-500">Comprada el: {{ ticket.purchase_time }}</p>
-                    <p class="text-sm text-gray-500">Estado: {% if ticket.is_validated %}Validada{% else %}No Validada{% endif %}</p>
+                <div class="ticket-card rounded-2xl border border-slate-200 bg-white/80 backdrop-blur p-4 shadow-md cursor-pointer" data-ticket-id="{{ ticket.id }}">
+                    <h2 class="text-lg font-medium text-slate-900">{{ ticket.ticket_type.event.title }}</h2>
+                    <p class="text-sm text-slate-500">Tipo: {{ ticket.ticket_type.name }}</p>
+                    <p class="text-sm text-slate-500">Comprada el: {{ ticket.purchase_time }}</p>
+                    <p class="text-sm text-slate-500">Estado: {% if ticket.is_validated %}<span class="text-green-700">Validada</span>{% else %}<span class="text-red-700">No Validada</span>{% endif %}</p>
                      <div class="mt-4 flex justify-center">
                          <img src="{% url 'tickets:generate-qr-code' ticket.id %}" alt="QR Code" class="w-24 h-24">
                      </div>
                      {% if not ticket.is_validated and user.userprofile.role == 'attendee' %}
                      <div class="mt-4 flex justify-center">
-                         <a href="{% url 'tickets:validate-ticket' ticket.id %}" class="px-4 py-2 font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">Validar</a>
+                         <a href="{% url 'tickets:validate-ticket' ticket.id %}" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium bg-brand-600 text-white hover:bg-brand-700 transition-colors">Validar</a>
                      </div>
                      {% endif %}
                 </div>
@@ -27,13 +27,13 @@
         </div>
 
         <!-- Modal para ver el ticket en detalle -->
-        <div id="ticketModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 hidden">
-            <div class="bg-white rounded-lg p-8 max-w-lg w-full mx-auto relative">
+        <div id="ticketModal" class="fixed inset-0 bg-slate-900/70 flex items-center justify-center z-50 hidden">
+            <div class="rounded-2xl border border-slate-200 bg-white p-8 max-w-lg w-full mx-auto relative shadow-xl">
                 <button id="closeModal" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-2xl font-bold">&times;</button>
-                <h2 id="modalEventTitle" class="text-2xl font-bold text-center mb-4"></h2>
-                <p id="modalTicketType" class="text-lg text-gray-700 text-center"></p>
-                <p id="modalPurchaseTime" class="text-md text-gray-600 text-center"></p>
-                <p id="modalStatus" class="text-md text-gray-600 text-center mb-6"></p>
+                <h2 id="modalEventTitle" class="text-2xl font-semibold text-center mb-4"></h2>
+                <p id="modalTicketType" class="text-lg text-slate-700 text-center"></p>
+                <p id="modalPurchaseTime" class="text-md text-slate-600 text-center"></p>
+                <p id="modalStatus" class="text-md text-slate-600 text-center mb-6"></p>
                 <div id="modalQrCode" class="flex justify-center">
                     <!-- QR code will be loaded here -->
                 </div>
@@ -82,7 +82,7 @@
         </script>
 
     {% else %}
-        <p>Aún no has comprado ninguna entrada.</p>
+        <p class="text-slate-600">Aún no has comprado ninguna entrada.</p>
     {% endif %}
 </div>
 {% endblock %}

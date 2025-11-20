@@ -3,21 +3,21 @@
 {% block title %}Dashboard del Asistente{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-bold mb-6">Mis Eventos como Asistente</h1>
+<h1 class="text-2xl font-semibold mb-6">Mis Eventos como Asistente</h1>
 
 {% if assisted_events %}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for event in assisted_events %}
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-xl font-bold">{{ event.title }}</h2>
-                <p class="text-gray-600 mt-2">{{ event.start_time|date:"d M, Y H:i" }}</p>
+            <div class="p-6 rounded-2xl border border-slate-200 bg-white/80 backdrop-blur shadow-md">
+                <h2 class="text-xl font-semibold">{{ event.title }}</h2>
+                <p class="text-slate-600 mt-2">{{ event.start_time|date:"d M, Y H:i" }}</p>
                 <div class="mt-4">
-                    <a href="{% url 'dashboard:attendee-event-dashboard' event.id %}" class="font-medium text-purple-600 hover:text-purple-500">Ver Estadísticas y Validar</a>
+                    <a href="{% url 'dashboard:attendee-event-dashboard' event.id %}" class="inline-flex items-center gap-2 px-3 py-2 rounded-lg font-medium text-brand-700 hover:text-brand-800 hover:bg-brand-50">Ver Estadísticas y Validar</a>
                 </div>
             </div>
         {% endfor %}
     </div>
 {% else %}
-    <p>Aún no eres asistente de ningún evento. Ve a la sección de <a href="{% url 'events:event-list' %}" class="text-purple-600 hover:underline">Eventos</a> para unirte a uno.</p>
+    <p class="text-slate-600">Aún no eres asistente de ningún evento. Ve a la sección de <a href="{% url 'events:event-list' %}" class="text-brand-700 hover:underline">Eventos</a> para unirte a uno.</p>
 {% endif %}
 {% endblock %}

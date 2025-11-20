@@ -4,15 +4,15 @@
 {% block title %}Comprar Entradas para {{ event.title }}{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-bold">Comprar Entradas para {{ event.title }}</h1>
+<h1 class="text-2xl font-semibold">Comprar Entradas para {{ event.title }}</h1>
 
-<div class="mt-6 p-6 bg-white rounded-lg shadow-md">
+<div class="mt-6 p-6 rounded-2xl border border-slate-200 bg-white/80 backdrop-blur shadow-md">
     <form method="post" class="space-y-4">
         {% csrf_token %}
         {% for field in form %}
             <div class="form-group">
-                <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ field.label }}</label>
-                {{ field|add_attr:"mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm" }}
+                <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-slate-700">{{ field.label }}</label>
+                {{ field|add_attr:"mt-1 block w-full rounded-lg border border-slate-300 bg-white/70 px-3 py-2 text-slate-900 placeholder-slate-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500 sm:text-sm" }}
                 {% if field.help_text %}
                     <p class="mt-2 text-sm text-gray-500">{{ field.help_text }}</p>
                 {% endif %}
@@ -24,24 +24,24 @@
             </div>
         {% endfor %}
         <div>
-            <button type="submit" class="px-4 py-2 font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700">Comprar</button>
+            <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium bg-gradient-to-r from-brand-600 to-brand-500 text-white hover:from-brand-700 hover:to-brand-600 transition-colors">Comprar</button>
         </div>
     </form>
 </div>
 
 <div class="mt-6">
-    <h2 class="text-xl font-bold">Tipos de Entrada Disponibles</h2>
-    <ul class="mt-4 bg-white shadow-md rounded-lg divide-y divide-gray-200">
+    <h2 class="text-xl font-semibold">Tipos de Entrada Disponibles</h2>
+    <ul class="mt-4 rounded-2xl border border-slate-200 bg-white/80 backdrop-blur shadow-md divide-y divide-slate-200">
         {% for ticket_type in ticket_types %}
             <li class="p-4 flex justify-between items-center">
                 <div>
-                    <p class="text-lg font-medium text-gray-900">{{ ticket_type.name }}</p>
-                    <p class="text-sm text-gray-500">Precio: ${{ ticket_type.price }}</p>
+                    <p class="text-lg font-medium text-slate-900">{{ ticket_type.name }}</p>
+                    <p class="text-sm text-slate-500">Precio: ${{ ticket_type.price }}</p>
                 </div>
-                <span class="px-2 py-1 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">Cantidad: {{ ticket_type.quantity }}</span>
+                <span class="px-2.5 py-0.5 text-xs font-medium text-brand-700 bg-brand-100 rounded-full">Cantidad: {{ ticket_type.quantity }}</span>
             </li>
         {% empty %}
-            <li class="p-4 text-gray-500">No hay tipos de entrada disponibles para este evento.</li>
+            <li class="p-4 text-slate-500">No hay tipos de entrada disponibles para este evento.</li>
         {% endfor %}
     </ul>
 </div>

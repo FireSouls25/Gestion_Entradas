@@ -3,32 +3,40 @@
 {% block title %}Configuración{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-bold">Configuración de la Cuenta</h1>
+<h1 class="text-2xl font-semibold text-gray-800">Configuración de la Cuenta</h1>
 
-{% load form_filters %}
-
-<div class="mt-6 p-6 bg-white rounded-lg shadow-md">
-    <h2 class="text-xl font-bold">Modificar Datos</h2>
+<div class="mt-6 rounded-2xl border border-gray-300 bg-gray-200/90 backdrop-blur p-6 shadow-lg">
+    <h2 class="text-xl font-semibold text-gray-800">Modificar Datos</h2>
     <form method="post" class="mt-4 space-y-4">
         {% csrf_token %}
         <div>
-            <label for="id_username" class="block text-sm font-medium text-gray-700">Nombre de usuario</label>
-            {{ form.username|add_attr:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm" }}
+            <label for="id_username" class="block text-sm font-medium text-gray-700 mb-2">Nombre de usuario</label>
+            <div class="flex items-center bg-gray-700 rounded-lg px-4 py-3">
+                <i class="fas fa-user text-brand-600 mr-3"></i>
+                <input id="id_username" name="username" type="text" required 
+                       class="w-full bg-transparent text-white placeholder-gray-300 focus:outline-none" 
+                       value="{{ form.username.value|default:'' }}" placeholder="Nombre de usuario">
+            </div>
         </div>
         <div>
-            <label for="id_email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
-            {{ form.email|add_attr:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm" }}
+            <label for="id_email" class="block text-sm font-medium text-gray-700 mb-2">Correo electrónico</label>
+            <div class="flex items-center bg-gray-700 rounded-lg px-4 py-3">
+                <i class="fas fa-envelope text-brand-600 mr-3"></i>
+                <input id="id_email" name="email" type="email" required 
+                       class="w-full bg-transparent text-white placeholder-gray-300 focus:outline-none" 
+                       value="{{ form.email.value|default:'' }}" placeholder="Correo electrónico">
+            </div>
         </div>
-        <button type="submit" class="px-4 py-2 font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700">Guardar Cambios</button>
+        <button type="submit" class="px-4 py-2 rounded-lg font-medium bg-brand-700 hover:bg-brand-800 text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 shadow-lg uppercase tracking-wide">GUARDAR CAMBIOS</button>
     </form>
 </div>
 
-<div class="mt-6 p-6 bg-white rounded-lg shadow-md">
-    <h2 class="text-xl font-bold text-red-600">Eliminar Cuenta</h2>
+<div class="mt-6 rounded-2xl border border-gray-300 bg-gray-200/90 backdrop-blur p-6 shadow-lg">
+    <h2 class="text-xl font-semibold text-red-600">Eliminar Cuenta</h2>
     <p class="mt-2 text-gray-700">Al eliminar tu cuenta, se borrarán todos tus datos de forma permanente. Esta acción no se puede deshacer.</p>
     <form method="post" action="{% url 'users:delete-account' %}" class="mt-4">
         {% csrf_token %}
-        <button type="submit" class="px-4 py-2 font-medium text-white bg-red-600 rounded-md hover:bg-red-700" onclick="return confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible.');">Eliminar mi cuenta</button>
+        <button type="submit" class="px-4 py-2 rounded-lg font-medium bg-red-600 text-white hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 shadow-lg uppercase tracking-wide" onclick="return confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible.');">ELIMINAR MI CUENTA</button>
     </form>
 </div>
 {% endblock %}

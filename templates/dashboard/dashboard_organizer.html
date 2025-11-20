@@ -3,21 +3,21 @@
 {% block title %}Dashboard del Organizador{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-bold">Dashboard del Organizador</h1>
-<p>Bienvenido, {{ user.username }}. Aquí puedes gestionar tus eventos.</p>
+<h1 class="text-2xl font-semibold">Dashboard del Organizador</h1>
+<p class="text-slate-600">Bienvenido, {{ user.username }}. Aquí puedes gestionar tus eventos.</p>
 
 <h2 class="mt-8 text-xl font-bold">Tus Eventos</h2>
 <div class="grid grid-cols-1 gap-6 mt-6 md:grid-cols-2 lg:grid-cols-3">
     {% for event in events %}
-        <div class="p-6 bg-white rounded-lg shadow-md">
-            <h3 class="text-lg font-bold">{{ event.title }}</h3>
+        <div class="p-6 rounded-2xl border border-slate-200 bg-white/80 backdrop-blur shadow-md">
+            <h3 class="text-lg font-semibold">{{ event.title }}</h3>
             <div class="mt-4">
-                <a href="{% url 'events:event-detail' event.pk %}" class="font-medium text-purple-600 hover:text-purple-500">Ver Detalles</a>
+                <a href="{% url 'events:event-detail' event.pk %}" class="inline-flex items-center gap-2 px-3 py-2 rounded-lg font-medium text-brand-700 hover:text-brand-800 hover:bg-brand-50">Ver Detalles</a>
                 <a href="{% url 'dashboard:event-statistics' event.pk %}" class="ml-4 font-medium text-blue-600 hover:text-blue-500">Ver Estadísticas</a>
             </div>
         </div>
     {% empty %}
-        <p>No has creado ningún evento todavía.</p>
+        <p class="text-slate-600">No has creado ningún evento todavía.</p>
     {% endfor %}
 </div>
 {% endblock %}
